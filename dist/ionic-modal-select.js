@@ -42,21 +42,21 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	__webpack_require__(1);
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	compile.$inject = ["$compile"];
 	modalSelect.$inject = ["$ionicModal", "$timeout", "$filter", "$parse", "$templateCache"];
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	/*!
 	 * Copyright 2015 Inmagik SRL.
@@ -144,6 +144,8 @@
 					selectedClass: iAttrs.selectedClass || 'option-selected',
 					itemClass: iAttrs.itemClass || 'item item-text-wrap',
 					searchTemplate: iAttrs.searchTemplate || (multiple ? modalTemplateMultiple : modalTemplate),
+					itemWidth: iAttrs.itemWidth || '100%',
+					itemHeight: iAttrs.itemHeight || '55px',
 	
 					//search stuff
 					hasSearch: iAttrs.hasSearch !== "true" ? false : true,
@@ -460,24 +462,41 @@
 					return angular.copy(option);
 				};
 	
+				// init ischecked for multiple mode to synch with scope
+				var initIsChecked = function initIsChecked() {
+					if (multiple) {
+						var values = ngModelController.$viewValue;
+						if (!values || values.length == 0) return;
+						scope.options.forEach(function (oVal, i) {
+							values.forEach(function (vVal, i) {
+								if (angular.equals(vVal, oVal[1])) {
+									scope.isChecked[oVal[0]] = true;
+								}
+							});
+						});
+					}
+				};
 				//#TODO ?: WRAP INTO $timeout?
-				ngModelController.$render();
+				$timeout(function () {
+					initIsChecked();
+					ngModelController.$render();
+				});
 			}
 		};
 	}
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
-	module.exports = " <ion-modal-view class=\"ionic-select-modal\" ng-class=\"::ui.modalClass\">\n\n    <ion-header-bar ng-class=\"::ui.headerFooterClass\">\n      <h1 class=\"title\">{{::ui.modalTitle}}</h1>\n    </ion-header-bar>\n\n    <div class=\"bar bar-subheader item-input-inset\" ng-class=\"::ui.subHeaderClass\" ng-if=\"ui.hasSearch\">\n      <label class=\"item-input-wrapper\">\n        <i class=\"icon ion-ios-search placeholder-icon\"></i>\n        <input type=\"search\" placeholder=\"{{::ui.searchPlaceholder}}\" ng-model=\"ui.searchValue\">\n      </label>\n      <button type=\"button\" class=\"button button-clear\" ng-click=\"clearSearch()\">\n        {{ ui.cancelSearchButton }}\n      </button>\n    </div>\n\n    <ion-content class=\"has-header\" ng-class=\"{'has-subheader':ui.hasSearch}\">\n    <div class=\"text-center\" ng-if=\"!ui.shortList && !showList\" style=\"padding-top:40px;\">\n        <h4 class=\"muted\">{{::ui.loadListMessage}}</h4>\n        <p>\n            <ion-spinner></ion-spinner>\n        </p>\n    </div>\n\n    <div ng-if=\"showList\">\n        <!--collection-repeat mode -->\n        <!-- not working right now -->\n        <!--\n        <div ng-if=\"!ui.shortList\" >\n            <div class=\"list\" class=\"animate-if\" >\n                <div\n                    class=\"item item-checkbox\" ng-class=\"ui.itemClass\"\n                     collection-repeat=\"optionm in options track by $index\">\n                    <label class=\"checkbox\">\n                        <input type=\"checkbox\" ng-model=\"isChecked[optionm[0]]\">\n                    </label>\n\n                    <div compile=\"inner\" ng-init=\"option=optionm[1]\" compile-once=\"false\"></div>\n\n                </div>\n            </div>\n        </div>\n        -->\n\n        <!-- ng-repeat mode -->\n        <div ng-if=\"ui.shortList || true\">\n            <div class=\"list\">\n                <div\n                  class=\"item item-checkbox\" ng-class=\"ui.itemClass\"\n                  ng-repeat=\"optionm in options track by optionm[0]\">\n                    <label class=\"checkbox\">\n                        <input type=\"checkbox\" ng-model=\"isChecked[optionm[0]]\">\n                    </label>\n                    <div ng-init=\"option=optionm[1]\" compile=\"inner\" compile-once=\"true\"></div>\n                </div>\n            </div>\n        </div>\n    </div>\n    </ion-content>\n    <ion-footer-bar ng-class=\"::ui.headerFooterClass\">\n        <button class=\"button button-stable\" ng-click=\"closeModal()\">{{ui.cancelButton}}</button>\n        <div class=\"title\" style=\"padding-top:6px\">\n            <button class=\"button button-navbar\" ng-click=\"setValues()\">OK</button>\n        </div>\n        <button ng-if=\"::!ui.hideReset\" class=\"button button-stable\" ng-click=\"unsetValues()\">{{ui.resetButton}}</button>\n    </ion-footer-bar>\n</ion-modal-view>\n"
+	module.exports = " <ion-modal-view class=\"ionic-select-modal\" ng-class=\"::ui.modalClass\">\r\n\r\n    <ion-header-bar ng-class=\"::ui.headerFooterClass\">\r\n      <h1 class=\"title\">{{::ui.modalTitle}}</h1>\r\n    </ion-header-bar>\r\n\r\n    <div class=\"bar bar-subheader item-input-inset\" ng-class=\"::ui.subHeaderClass\" ng-if=\"ui.hasSearch\">\r\n      <label class=\"item-input-wrapper\">\r\n        <i class=\"icon ion-ios-search placeholder-icon\"></i>\r\n        <input type=\"search\" placeholder=\"{{::ui.searchPlaceholder}}\" ng-model=\"ui.searchValue\">\r\n      </label>\r\n      <button type=\"button\" class=\"button button-clear\" ng-click=\"clearSearch()\">\r\n        {{ ui.cancelSearchButton }}\r\n      </button>\r\n    </div>\r\n\r\n    <ion-content class=\"has-header\" ng-class=\"{'has-subheader':ui.hasSearch}\">\r\n    <div class=\"text-center\" ng-if=\"!ui.shortList && !showList\" style=\"padding-top:40px;\">\r\n        <h4 class=\"muted\">{{::ui.loadListMessage}}</h4>\r\n        <p>\r\n            <ion-spinner></ion-spinner>\r\n        </p>\r\n    </div>\r\n\r\n    <div ng-if=\"showList\">\r\n        <!--collection-repeat mode -->\r\n        <!-- not working right now -->\r\n        <!--\r\n        <div ng-if=\"!ui.shortList\" >\r\n            <div class=\"list\" class=\"animate-if\" >\r\n                <div\r\n                    class=\"item item-checkbox\" ng-class=\"ui.itemClass\"\r\n                     collection-repeat=\"optionm in options track by $index\">\r\n                    <label class=\"checkbox\">\r\n                        <input type=\"checkbox\" ng-model=\"isChecked[optionm[0]]\">\r\n                    </label>\r\n\r\n                    <div compile=\"inner\" ng-init=\"option=optionm[1]\" compile-once=\"false\"></div>\r\n\r\n                </div>\r\n            </div>\r\n        </div>\r\n        -->\r\n\r\n        <!-- ng-repeat mode -->\r\n        <div ng-if=\"ui.shortList || true\">\r\n            <div class=\"list\">\r\n                <div\r\n                  class=\"item item-checkbox\" ng-class=\"ui.itemClass\"\r\n                  ng-repeat=\"optionm in options track by optionm[0]\">\r\n                    <label class=\"checkbox\">\r\n                        <input type=\"checkbox\" ng-model=\"isChecked[optionm[0]]\">\r\n                    </label>\r\n                    <div ng-init=\"option=optionm[1]\" compile=\"inner\" compile-once=\"true\"></div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    </ion-content>\r\n    <ion-footer-bar ng-class=\"::ui.headerFooterClass\">\r\n        <button class=\"button button-stable\" ng-click=\"closeModal()\">{{ui.cancelButton}}</button>\r\n        <div class=\"title\" style=\"padding-top:6px\">\r\n            <button class=\"button button-navbar\" ng-click=\"setValues()\">{{ui.okButton}}</button>\r\n        </div>\r\n        <button ng-if=\"::!ui.hideReset\" class=\"button button-stable\" ng-click=\"unsetValues()\">{{ui.resetButton}}</button>\r\n    </ion-footer-bar>\r\n</ion-modal-view>\r\n"
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
-	module.exports = " <ion-modal-view class=\"ionic-select-modal\" ng-class=\"::ui.modalClass\">\n\n    <ion-header-bar ng-class=\"::ui.headerFooterClass\">\n      <h1 class=\"title\">{{::ui.modalTitle}}</h1>\n    </ion-header-bar>\n\n    <div class=\"bar bar-subheader item-input-inset\" ng-class=\"::ui.subHeaderClass\" ng-if=\"ui.hasSearch\">\n      <label class=\"item-input-wrapper\">\n        <i class=\"icon ion-ios-search placeholder-icon\"></i>\n        <input type=\"search\" placeholder=\"{{::ui.searchPlaceholder}}\" ng-model=\"ui.searchValue\">\n      </label>\n      <button type=\"button\" class=\"button button-clear\" ng-click=\"clearSearch()\">\n        {{ ui.cancelSearchButton }}\n      </button>\n    </div>\n\n    <ion-content class=\"has-header\" ng-class=\"{'has-subheader':ui.hasSearch}\">\n        <div class=\"text-center\" ng-if=\"!ui.shortList && !showList\" style=\"padding-top:40px;\">\n            <h4 class=\"muted\">{{::ui.loadListMessage}}</h4>\n            <p>\n                <ion-spinner></ion-spinner>\n            </p>\n        </div>\n        <div ng-if=\"showList\">\n            <div ng-if=\"!ui.shortList\">\n                <div class=\"list\" ng-if=\"showList\" class=\"animate-if\">\n                    <div\n                      ng-class=\"{ '{{::ui.itemClass}}' : true, '{{::ui.selectedClass}}': compareValues(getSelectedValue(option), ui.value) }\"\n                      collection-repeat=\"option in options track by $index\"\n                      ng-click=\"setOption(option)\"\n                      ng-class=\"{'{{::ui.selectedClass}}': compareValues(getSelectedValue(option), ui.value) }\">\n                        <div compile=\"inner\" compile-once=\"true\"></div>\n                    </div>\n                </div>\n            </div>\n            <div ng-if=\"ui.shortList\">\n                <div class=\"list\">\n                    <div\n                      ng-repeat=\"option in options track by $index\"\n                      ng-click=\"setOption(option)\"\n                      ng-class=\"{ '{{::ui.itemClass}}' : true, '{{::ui.selectedClass}}': compareValues(getSelectedValue(option), ui.value) }\">\n                        <div compile=\"inner\" compile-once=\"true\"></div>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div ng-if=\"notFound && options.length == 0\">\n            <div compile=\"notFound\" compile-once=\"true\" ng-click=\"closeModal()\"></div>\n        </div>\n\n    </ion-content>\n\n    <ion-footer-bar ng-class=\"::ui.headerFooterClass\">\n        <button type=\"button\" class=\"button button-stable modal-select-close-button\" ng-click=\"closeModal()\">{{ui.cancelButton}}</button>\n        <button type=\"button\" ng-if=\"::!ui.hideReset\" class=\"button button-stable\" ng-click=\"unsetValue()\">{{ui.resetButton}}</button>\n    </ion-footer-bar>\n\n</ion-modal-view>\n"
+	module.exports = " <ion-modal-view class=\"ionic-select-modal\" ng-class=\"::ui.modalClass\">\r\n\r\n    <ion-header-bar ng-class=\"::ui.headerFooterClass\">\r\n      <h1 class=\"title\">{{::ui.modalTitle}}</h1>\r\n    </ion-header-bar>\r\n\r\n    <div class=\"bar bar-subheader item-input-inset\" ng-class=\"::ui.subHeaderClass\" ng-if=\"ui.hasSearch\">\r\n      <label class=\"item-input-wrapper\">\r\n        <i class=\"icon ion-ios-search placeholder-icon\"></i>\r\n        <input type=\"search\" placeholder=\"{{::ui.searchPlaceholder}}\" ng-model=\"ui.searchValue\">\r\n      </label>\r\n      <button type=\"button\" class=\"button button-clear\" ng-click=\"clearSearch()\">\r\n        {{ ui.cancelSearchButton }}\r\n      </button>\r\n    </div>\r\n\r\n    <ion-content class=\"has-header\" ng-class=\"{'has-subheader':ui.hasSearch}\">\r\n        <div class=\"text-center\" ng-if=\"!ui.shortList && !showList\" style=\"padding-top:40px;\">\r\n            <h4 class=\"muted\">{{::ui.loadListMessage}}</h4>\r\n            <p>\r\n                <ion-spinner></ion-spinner>\r\n            </p>\r\n        </div>\r\n        <div ng-if=\"showList\">\r\n            <div ng-if=\"!ui.shortList\">\r\n                <div class=\"list\" ng-if=\"showList\" class=\"animate-if\">\r\n                    <div\r\n                      ng-class=\"{ '{{::ui.itemClass}}' : true, '{{::ui.selectedClass}}': compareValues(getSelectedValue(option), ui.value) }\"\r\n                      collection-repeat=\"option in options track by $index\"\r\n                      item-width=\"ui.itemWidth\"\r\n                      item-height=\"ui.itemHeight\"\r\n                      ng-click=\"setOption(option)\"\r\n                      ng-class=\"{'{{::ui.selectedClass}}': compareValues(getSelectedValue(option), ui.value) }\">\r\n                        <div compile=\"inner\" compile-once=\"true\"></div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div ng-if=\"ui.shortList\">\r\n                <div class=\"list\">\r\n                    <div\r\n                      ng-repeat=\"option in options track by $index\"\r\n                      ng-click=\"setOption(option)\"\r\n                      ng-class=\"{ '{{::ui.itemClass}}' : true, '{{::ui.selectedClass}}': compareValues(getSelectedValue(option), ui.value) }\">\r\n                        <div compile=\"inner\" compile-once=\"true\"></div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <div ng-if=\"notFound && options.length == 0\">\r\n            <div compile=\"notFound\" compile-once=\"true\" ng-click=\"closeModal()\"></div>\r\n        </div>\r\n\r\n    </ion-content>\r\n\r\n    <ion-footer-bar ng-class=\"::ui.headerFooterClass\">\r\n        <button type=\"button\" class=\"button button-stable modal-select-close-button\" ng-click=\"closeModal()\">{{ui.cancelButton}}</button>\r\n        <button type=\"button\" ng-if=\"::!ui.hideReset\" class=\"button button-stable\" ng-click=\"unsetValue()\">{{ui.resetButton}}</button>\r\n    </ion-footer-bar>\r\n\r\n</ion-modal-view>\r\n"
 
-/***/ }
+/***/ })
 /******/ ]);
 //# sourceMappingURL=ionic-modal-select.js.map
