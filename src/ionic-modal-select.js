@@ -61,6 +61,8 @@ angular.module('ionic-modal-select', [])
                 headerFooterClass : iAttrs.headerFooterClass || 'bar-stable',
                 value  : null,
                 selectedClass : iAttrs.selectedClass || 'option-selected',
+                itemWidth : iAttrs.itemWidth || '100%',
+                itemHeight : iAttrs.itemHeight || '55px',
                 //search stuff
                 hasSearch : iAttrs.hasSearch  !== "true" ? false : true,
                 searchValue : '',

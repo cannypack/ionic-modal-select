@@ -12,7 +12,7 @@ var modalSelectTemplates = modalSelectTemplates || {};modalSelectTemplates['moda
     '            </p>\n' +
     '        </div>\n' +
     '        <div class="list" ng-if="showList" class="animate-if">\n' +
-    '            <div class="item item-text-wrap" collection-repeat="option in options track by $index" ng-click="setOption(option)" ng-class="{\'{{::ui.selectedClass}}\': getSelectedValue(option) == ui.value}"> \n' +
+    '            <div class="item item-text-wrap" collection-repeat="option in options track by $index" ng-click="setOption(option)" ng-class="{\'{{::ui.selectedClass}}\': getSelectedValue(option) == ui.value}" item-width="ui.itemWidth" item-height="ui.itemHeight"> \n' +
     '                <div compile="inner" compile-once="true"></div>\n' +
     '            </div>\n' +
     '        </div>\n' +
@@ -62,7 +62,7 @@ var modalSelectTemplates = modalSelectTemplates || {};modalSelectTemplates['moda
     '        <div ng-if="showList">\n' +
     '            <div ng-if="!ui.shortList">\n' +
     '                <div class="list" ng-if="showList" class="animate-if">\n' +
-    '                    <div class="item item-text-wrap" collection-repeat="option in options track by $index" ng-click="setOption(option)" ng-class="{\'{{::ui.selectedClass}}\': compareValues(getSelectedValue(option), ui.value) }"> \n' +
+    '                    <div class="item item-text-wrap" collection-repeat="option in options track by $index" ng-click="setOption(option)" ng-class="{\'{{::ui.selectedClass}}\': compareValues(getSelectedValue(option), ui.value) }" item-width="ui.itemWidth" item-height="ui.itemHeight">\n' +
     '                        <div compile="inner" compile-once="true"></div>\n' +
     '                    </div>\n' +
     '                </div>\n' +
@@ -163,6 +163,8 @@ angular.module('ionic-modal-select', [])
                 headerFooterClass : iAttrs.headerFooterClass || 'bar-stable',
                 value  : null,
                 selectedClass : iAttrs.selectedClass || 'option-selected',
+                itemWidth : iAttrs.itemWidth || '100%',
+                itemHeight : iAttrs.itemHeight || '55px',
                 //search stuff
                 hasSearch : iAttrs.hasSearch  !== "true" ? false : true,
                 searchValue : '',

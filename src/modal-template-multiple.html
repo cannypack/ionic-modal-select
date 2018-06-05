@@ -12,7 +12,7 @@
             </p>
         </div>
         <div class="list" ng-if="showList" class="animate-if">
-            <div class="item item-text-wrap" collection-repeat="option in options track by $index" ng-click="setOption(option)" ng-class="{'{{::ui.selectedClass}}': getSelectedValue(option) == ui.value}"> 
+            <div class="item item-text-wrap" collection-repeat="option in options track by $index" ng-click="setOption(option)" ng-class="{'{{::ui.selectedClass}}': getSelectedValue(option) == ui.value}" item-width="ui.itemWidth" item-height="ui.itemHeight"> 
                 <div compile="inner" compile-once="true"></div>
             </div>
         </div>
