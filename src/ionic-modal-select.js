@@ -236,7 +236,7 @@ angular.module('ionic-modal-select', [])
                 scope.$watch('ui.searchValue', function(nv){
                     scope.options = $filter('filter')(allOptions, nv, function(actual, expected) { 
                         if (searchProperties){
-                            if (typeof actual == 'object'){
+                            if (typeof actual === 'object' && actual !== null){
                                 for (var i = 0; i < searchProperties.length; i++){
                                     if (actual[searchProperties[i]] && actual[searchProperties[i]].toLowerCase().indexOf(expected.toLowerCase()) >= 0){
                                         return true;
