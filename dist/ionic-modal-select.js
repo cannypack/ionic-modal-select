@@ -336,18 +336,18 @@ angular.module('ionic-modal-select', [])
             //filter function
             if (scope.ui.hasSearch) {
                 scope.$watch('ui.searchValue', function(nv){
-                    scope.options = $filter('filter')(allOptions, nv, function(actual, expected) { 
+                    scope.options = allOptions.filter(function(actual) {
                         if (searchProperties){
                             if (typeof actual === 'object' && actual !== null){
                                 for (var i = 0; i < searchProperties.length; i++){
-                                    if (actual[searchProperties[i]] && actual[searchProperties[i]].toLowerCase().indexOf(expected.toLowerCase()) >= 0){
+                                    if (actual[searchProperties[i]] && actual[searchProperties[i]].toLowerCase().indexOf(nv.toLowerCase()) >= 0){
                                         return true;
                                     }
                                 }
                             }
                             return false;
                         } else {
-                            if(actual.toString().toLowerCase().indexOf(expected.toLowerCase()) >= 0){
+                            if(actual.toString().toLowerCase().indexOf(nv.toLowerCase()) >= 0){
                                 return true;
                             }
                         }
